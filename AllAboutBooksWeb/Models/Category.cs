@@ -9,10 +9,11 @@ public class Category
     public long Id { get; set; }
 
     [Required]
-    [MaxLength(200)]
+    [MaxLength(50)]
     [DisplayName("Category Name")]
     public string Name { get; set; } = string.Empty;
 
     [DisplayName("Display Order")]
+    [Range(1, 100, ErrorMessage = "Display Order must be between 1-100")]
     public long DisplayOrder { get; set; }
 }
