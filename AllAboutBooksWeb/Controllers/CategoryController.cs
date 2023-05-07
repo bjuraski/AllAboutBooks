@@ -1,4 +1,5 @@
 ﻿using AllAboutBooksWeb.Data;
+using AllAboutBooksWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,5 +22,19 @@ public class CategoryController : Controller
             .ToListAsync();
 
         return View(categories);
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Category category)
+    {
+        await _applicationDbContext.AddAsync(category);
+        await _applicationDbContext.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Category");
     }
 }
