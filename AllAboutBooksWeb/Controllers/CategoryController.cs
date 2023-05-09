@@ -1,5 +1,5 @@
-﻿using AllAboutBooksWeb.Data;
-using AllAboutBooksWeb.Models;
+﻿using AllAboutBooks.DataAccess.Data;
+using AllAboutBooks.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,7 @@
-﻿using AllAboutBooksWeb.Models;
+﻿using AllAboutBooks.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AllAboutBooksWeb.Data;
+namespace AllAboutBooks.DataAccess.Data;
 
 public class ApplicationDbContext : DbContext
 {

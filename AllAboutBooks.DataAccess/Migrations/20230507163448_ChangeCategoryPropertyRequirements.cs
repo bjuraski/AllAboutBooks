@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AllAboutBooksWeb.Migrations;
+namespace AllAboutBooks.DataAccess.Migrations;
 
 /// <inheritdoc />
 public partial class ChangeCategoryPropertyRequirements : Migration

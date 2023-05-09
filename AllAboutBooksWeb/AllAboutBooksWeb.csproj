@@ -23,4 +23,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AllAboutBooks.DataAccess\AllAboutBooks.DataAccess.csproj" />
+    <ProjectReference Include="..\AllAboutBooks.Models\AllAboutBooks.Models.csproj" />
+    <ProjectReference Include="..\AllAboutBooks.Utility\AllAboutBooks.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

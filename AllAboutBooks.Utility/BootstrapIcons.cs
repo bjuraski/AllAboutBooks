@@ -1,4 +1,4 @@
-﻿namespace AllAboutBooksWeb.Views;
+﻿namespace AllAboutBooks.Utility;
 
 public static class BootstrapIcons
 {
