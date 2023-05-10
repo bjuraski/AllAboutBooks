@@ -1,25 +1,21 @@
-﻿using AllAboutBooks.DataAccess.Data;
+﻿using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using AllAboutBooks.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AllAboutBooksWeb.Controllers;
 
 public class CategoryController : Controller
 {
-    private readonly ApplicationDbContext _applicationDbContext;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryController(ApplicationDbContext applicationDbContext)
+    public CategoryController(ICategoryRepository categoryRepository)
     {
-        _applicationDbContext = applicationDbContext;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<IActionResult> Index()
     {
-        var categories = await _applicationDbContext
-            .Categories
-            .OrderBy(c => c.DisplayOrder)
-            .ToListAsync();
+        var categories = await _categoryRepository.GetAll();
 
         return View(categories);
     }
@@ -39,8 +35,8 @@ public class CategoryController : Controller
 
         if (ModelState.IsValid)
         {
-            await _applicationDbContext.Categories.AddAsync(category);
-            await _applicationDbContext.SaveChangesAsync();
+            await _categoryRepository.Add(category);
+            await _categoryRepository.Save();
 
             TempData["success"] = "Category created successfully";
 
@@ -57,9 +53,7 @@ public class CategoryController : Controller
             return NotFound();
         }
 
-        var category = await _applicationDbContext
-            .Categories
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var category = await _categoryRepository.GetByExpression(c => c.Id == id);
 
         if (category is null)
         {
@@ -77,9 +71,9 @@ public class CategoryController : Controller
             ModelState.AddModelError(nameof(Category.Name), "The Display Order cannot exactly match the Name");
         }
 
-        var categoryWithSameDisplayOrder = await _applicationDbContext
-            .Categories
-            .FirstOrDefaultAsync(c => c.DisplayOrder == category.DisplayOrder && c.Id != category.Id);
+        var categoryWithSameDisplayOrder = await _categoryRepository
+            .GetByExpression(c => c.DisplayOrder == category.DisplayOrder && c.Id != category.Id);
+
 
         if (categoryWithSameDisplayOrder is not null)
         {
@@ -88,17 +82,15 @@ public class CategoryController : Controller
 
         if (ModelState.IsValid)
         {
-            var categoryInDb = await _applicationDbContext
-                .Categories
-                .FirstOrDefaultAsync(c => c.Id == category.Id);
+            var categoryInDb = await _categoryRepository.GetByExpression(c => c.Id == category.Id);
 
             if (categoryInDb is not null)
             {
-                _applicationDbContext.Entry(categoryInDb).State = EntityState.Detached;
+                _categoryRepository.SetEntityStateAsDetached(categoryInDb);
             }
 
-            _applicationDbContext.Categories.Update(category);
-            await _applicationDbContext.SaveChangesAsync();
+            _categoryRepository.Update(category);
+            await _categoryRepository.Save();
 
             TempData["success"] = "Category updated successfully";
 
@@ -115,9 +107,7 @@ public class CategoryController : Controller
             return NotFound();
         }
 
-        var category = await _applicationDbContext
-            .Categories
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var category = await _categoryRepository.GetByExpression(c => c.Id == id);
 
         if (category is null)
         {
@@ -130,17 +120,15 @@ public class CategoryController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePOST(long? id)
     {
-        var category = await _applicationDbContext
-            .Categories
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var category = await _categoryRepository.GetByExpression(c => c.Id == id);
 
         if (category is null)
         {
             return NotFound();
         }
 
-        _applicationDbContext.Categories.Remove(category);
-        await _applicationDbContext.SaveChangesAsync();
+        _categoryRepository.Remove(category);
+        await _categoryRepository.Save();
 
         TempData["success"] = "Category deleted successfully";
 
