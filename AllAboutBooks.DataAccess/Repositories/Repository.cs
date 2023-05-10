@@ -50,4 +50,14 @@ public class Repository<T> : IRepository<T> where T : class
     {
         _dbSet.RemoveRange(entities);
     }
+
+    public virtual void Update(T entity)
+    {
+        _dbSet.Update(entity);
+    }
+
+    public virtual async Task Save()
+    {
+        await _applicationDbContext.SaveChangesAsync();
+    }
 }

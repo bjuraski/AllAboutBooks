@@ -14,23 +14,13 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task Save()
+    public void SetEntityStateAsDetached(Category category)
     {
-        await _applicationDbContext.SaveChangesAsync();
-    }
-
-    public void Update(Category category)
-    {
-        _applicationDbContext.Categories.Update(category);
+        _applicationDbContext.Entry(category).State = EntityState.Detached;
     }
 
     public override IQueryable<Category> GetDefaultOrder(IQueryable<Category> query)
     {
         return base.GetDefaultOrder(query).OrderBy(c => c.DisplayOrder);
-    }
-
-    public void SetEntityStateAsDetached(Category category)
-    {
-        _applicationDbContext.Entry(category).State = EntityState.Detached;
     }
 }
