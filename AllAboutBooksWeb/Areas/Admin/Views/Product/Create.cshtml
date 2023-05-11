@@ -1,0 +1,72 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "New Product";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <div class="col-12 text-center">
+                <h2 class="text-primary">New Product</h2>
+            </div>
+        </div>
+        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+        <div class="form-group">
+            <div class="form-floating mb-3">
+                <input asp-for="Title" class="form-control" id="floatingTitle" />
+                <label for="floatingTitle" asp-for="Title"></label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Author" class="form-control" id="floatingAuthor" />
+                <label for="floatingAuthor" asp-for="Author"></label>
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="Description" class="form-control" id="floatingDescription"></textarea>
+                <label for="floatingDescription" asp-for="Description"></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="InternationalStandardBookNumber" class="form-control" id="floatingISBN" />
+                <label for="floatingISBN" asp-for="InternationalStandardBookNumber"></label>
+                <span asp-validation-for="InternationalStandardBookNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="ListPrice" class="form-control" id="floatingListPrice" />
+                <label for="floatingListPrice" asp-for="ListPrice"></label>
+                <span asp-validation-for="ListPrice" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Price" class="form-control" id="floatingPrice" />
+                <label for="floatingPrice" asp-for="Price"></label>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Price50" class="form-control" id="floatingPrice50" />
+                <label for="floatingPrice50" asp-for="Price50"></label>
+                <span asp-validation-for="Price50" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Price100" class="form-control" id="floatingPrice100" />
+                <label for="floatingPrice100" asp-for="Price100"></label>
+                <span asp-validation-for="Price100" class="text-danger"></span>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-outline-primary form-control">Create</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary form-control border">Back to Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -31,7 +31,7 @@ public class CategoryController : Controller
     {
         if (category.Name == category.DisplayOrder.ToString())
         {
-            ModelState.AddModelError(nameof(Category.Name), "The Display Order cannot exactly match the Name");
+            ModelState.AddModelError(nameof(category.Name), "The Display Order cannot exactly match the Name");
         }
 
         if (ModelState.IsValid)
@@ -69,7 +69,7 @@ public class CategoryController : Controller
     {
         if (category.Name == category.DisplayOrder.ToString())
         {
-            ModelState.AddModelError(nameof(Category.Name), "The Display Order cannot exactly match the Name");
+            ModelState.AddModelError(nameof(category.Name), "The Display Order cannot exactly match the Name");
         }
 
         var categoryWithSameDisplayOrder = await _categoryRepository
@@ -78,7 +78,7 @@ public class CategoryController : Controller
 
         if (categoryWithSameDisplayOrder is not null)
         {
-            ModelState.AddModelError(nameof(Category.DisplayOrder), "The Display Order value already exists");
+            ModelState.AddModelError(nameof(category.DisplayOrder), "The Display Order value already exists");
         }
 
         if (ModelState.IsValid)
@@ -119,7 +119,7 @@ public class CategoryController : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    public async Task<IActionResult> DeletePOST(long? id)
+    public async Task<IActionResult> DeletePOST(long id)
     {
         var category = await _categoryRepository.GetByExpression(c => c.Id == id);
 
