@@ -2,8 +2,9 @@
 using AllAboutBooks.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AllAboutBooksWeb.Controllers;
+namespace AllAboutBooksWeb.Areas.Admin.Controllers;
 
+[Area("Admin")]
 public class CategoryController : Controller
 {
     private readonly ICategoryRepository _categoryRepository;
