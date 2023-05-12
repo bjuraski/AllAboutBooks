@@ -34,7 +34,7 @@ public class Repository<T> : IRepository<T> where T : class
         return query;
     }
 
-    public async Task<T?> GetByExpression(Expression<Func<T, bool>> expression)
+    public async Task<T> GetByExpression(Expression<Func<T, bool>> expression)
     {
         var query = _dbSet.AsNoTracking();
 
@@ -51,9 +51,11 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet.RemoveRange(entities);
     }
 
-    public virtual void Update(T entity)
+    public virtual async Task Update(T entity)
     {
         _dbSet.Update(entity);
+
+        await Task.CompletedTask;
     }
 
     public virtual async Task Save()

@@ -10,19 +10,19 @@ public class Product
 
     [Required]
     [MaxLength(200)]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
     [MaxLength(1500)]
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; }
 
     [Required]
     [MaxLength(20)]
     [Display(Name = "ISBN")]
-    public string InternationalStandardBookNumber { get; set; } = string.Empty;
+    public string InternationalStandardBookNumber { get; set; }
 
     [Required]
     [MaxLength(100)]
-    public string Author { get; set; } = string.Empty;
+    public string Author { get; set; }
 
     [Required]
     [Display(Name = "List Price")]
@@ -44,8 +44,11 @@ public class Product
     [Range(1, 1000)]
     public double Price100 { get; set; }
 
+    [Display(Name = "Category")]
     public long CategoryId { get; set; }
 
     [ForeignKey("CategoryId")]
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
+
+    public string ImageUrl { get; set; }
 }

@@ -90,7 +90,7 @@ public class CategoryController : Controller
                 _categoryRepository.SetEntityStateAsDetached(categoryInDb);
             }
 
-            _categoryRepository.Update(category);
+            await _categoryRepository.Update(category);
             await _categoryRepository.Save();
 
             TempData["success"] = "Category updated successfully";

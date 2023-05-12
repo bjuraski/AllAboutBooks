@@ -6,11 +6,11 @@ public interface IRepository<T> where T : class
 {
     Task<IEnumerable<T>> GetAll();
 
-    Task<T?> GetByExpression(Expression<Func<T, bool>> expression);
+    Task<T> GetByExpression(Expression<Func<T, bool>> expression);
 
     Task Add(T entity);
 
-    void Update(T entity);
+    Task Update(T entity);
 
     void Remove(T entity);
 
