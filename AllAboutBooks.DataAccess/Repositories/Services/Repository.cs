@@ -16,22 +16,29 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         _dbSet = applicationDbContext.Set<TEntity>();
     }
 
-    public async Task InsertAsync(TEntity entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
-
     public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        var query = _dbSet.AsNoTracking();
-        var orderedQuery = GetDefaultOrder(query);
+        IQueryable<TEntity> query = _dbSet;
 
-        return await orderedQuery.ToListAsync();
+        query = ConfigureIncludes(query);
+        query = GetDefaultOrder(query);
+
+        return await query.ToListAsync();
+    }
+
+    public virtual IQueryable<TEntity> ConfigureIncludes(IQueryable<TEntity> query)
+    {
+        return query;
     }
 
     public virtual IQueryable<TEntity> GetDefaultOrder(IQueryable<TEntity> query)
     {
         return query;
+    }
+
+    public async Task InsertAsync(TEntity entity)
+    {
+        await _dbSet.AddAsync(entity);
     }
 
     public async Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression)

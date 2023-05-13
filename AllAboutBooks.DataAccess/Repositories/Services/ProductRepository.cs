@@ -14,6 +14,11 @@ public class ProductRepository : Repository<Product>, IProductRepository
         _applicationDbContext = applicationDbContext;
     }
 
+    public override IQueryable<Product> ConfigureIncludes(IQueryable<Product> query)
+    {
+        return base.ConfigureIncludes(query).Include(p => p.Category);
+    }
+
     public override async Task Update(Product entity)
     {
         var productFromDb = await _applicationDbContext
