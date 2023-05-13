@@ -43,7 +43,9 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
     public async Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression)
     {
-        var query = _dbSet.AsNoTracking();
+        IQueryable<TEntity> query = _dbSet;
+
+        query = ConfigureIncludes(query);
 
         return await query.FirstOrDefaultAsync(expression);
     }
