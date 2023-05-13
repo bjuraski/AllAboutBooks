@@ -2,7 +2,6 @@
 using AllAboutBooks.Models;
 using AllAboutBooks.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AllAboutBooksWeb.Areas.Admin.Controllers;
 
@@ -27,13 +26,7 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Upsert(long? id)
     {
-        var categories = await _unitOfWork.CategoryRepository.GetAll();
-        var categorySelectList = categories.Select(c => new SelectListItem
-        {
-            Text = c.Name,
-            Value = c.Id.ToString()
-        });
-
+        var categorySelectList = await _unitOfWork.CategoryRepository.GetCategorySelectList();
         var productViewModel = new ProductViewModel
         {
             Product = new Product(),
