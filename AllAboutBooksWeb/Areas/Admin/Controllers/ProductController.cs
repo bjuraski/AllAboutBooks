@@ -9,30 +9,25 @@ namespace AllAboutBooksWeb.Areas.Admin.Controllers;
 [Area("Admin")]
 public class ProductController : Controller
 {
-    private readonly IProductRepository _productRepository;
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ProductController(
-        IProductRepository productRepository,
-        ICategoryRepository categoryRepository,
-        IWebHostEnvironment webHostEnvironment)
+    public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
     {
-        _productRepository = productRepository;
-        _categoryRepository = categoryRepository;
+        _unitOfWork = unitOfWork;
         _webHostEnvironment = webHostEnvironment;
     }
 
     public async Task<IActionResult> Index()
     {
-        var products = await _productRepository.GetAll();
+        var products = await _unitOfWork.ProductRepository.GetAll();
 
         return View(products);
     }
 
     public async Task<IActionResult> Upsert(long? id)
     {
-        var categories = await _categoryRepository.GetAll();
+        var categories = await _unitOfWork.CategoryRepository.GetAll();
         var categorySelectList = categories.Select(c => new SelectListItem
         {
             Text = c.Name,
@@ -50,7 +45,7 @@ public class ProductController : Controller
             return View(productViewModel);
         }
 
-        productViewModel.Product = await _productRepository.GetByExpression(p => p.Id == id);
+        productViewModel.Product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
 
         return View(productViewModel);
     }
@@ -89,16 +84,16 @@ public class ProductController : Controller
 
         if (productViewModel.Product.Id == 0)
         {
-            await _productRepository.Add(productViewModel.Product);
-            await _productRepository.Save();
+            await _unitOfWork.ProductRepository.Add(productViewModel.Product);
+            await _unitOfWork.Save();
 
             TempData["success"] = "Product created successfully";
 
             return RedirectToAction("Index", "Product");
         }
 
-        await _productRepository.Update(productViewModel.Product);
-        await _productRepository.Save();
+        await _unitOfWork.ProductRepository.Update(productViewModel.Product);
+        await _unitOfWork.Save();
 
         TempData["success"] = "Product updated successfully";
 
@@ -112,7 +107,7 @@ public class ProductController : Controller
             return NotFound();
         }
 
-        var product = await _productRepository.GetByExpression(p => p.Id == id);
+        var product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
 
         if (product is null)
         {
@@ -125,15 +120,15 @@ public class ProductController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePOST(long id)
     {
-        var product = await _productRepository.GetByExpression(p => p.Id == id);
+        var product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
 
         if (product is null)
         {
             return NotFound();
         }
 
-        _productRepository.Remove(product);
-        await _productRepository.Save();
+        _unitOfWork.ProductRepository.Remove(product);
+        await _unitOfWork.Save();
 
         TempData["success"] = "Product deleted successfully";
 

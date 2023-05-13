@@ -57,9 +57,4 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
         return Task.CompletedTask;
     }
-
-    public virtual async Task Save()
-    {
-        await _applicationDbContext.SaveChangesAsync();
-    }
 }
