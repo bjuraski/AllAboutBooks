@@ -16,12 +16,12 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         _dbSet = applicationDbContext.Set<TEntity>();
     }
 
-    public async Task Add(TEntity entity)
+    public async Task InsertAsync(TEntity entity)
     {
         await _dbSet.AddAsync(entity);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAll()
+    public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         var query = _dbSet.AsNoTracking();
         var orderedQuery = GetDefaultOrder(query);
@@ -34,19 +34,19 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return query;
     }
 
-    public async Task<TEntity> GetByExpression(Expression<Func<TEntity, bool>> expression)
+    public async Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression)
     {
         var query = _dbSet.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(expression);
     }
 
-    public void Remove(TEntity entity)
+    public void Delete(TEntity entity)
     {
         _dbSet.Remove(entity);
     }
 
-    public void RemoveRange(IEnumerable<TEntity> entities)
+    public void DeleteRange(IEnumerable<TEntity> entities)
     {
         _dbSet.RemoveRange(entities);
     }

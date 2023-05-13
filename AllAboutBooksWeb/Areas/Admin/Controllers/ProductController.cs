@@ -19,7 +19,7 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var products = await _unitOfWork.ProductRepository.GetAll();
+        var products = await _unitOfWork.ProductRepository.GetAllAsync();
 
         return View(products);
     }
@@ -38,7 +38,7 @@ public class ProductController : Controller
             return View(productViewModel);
         }
 
-        productViewModel.Product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
+        productViewModel.Product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
 
         return View(productViewModel);
     }
@@ -77,7 +77,7 @@ public class ProductController : Controller
 
         if (productViewModel.Product.Id == 0)
         {
-            await _unitOfWork.ProductRepository.Add(productViewModel.Product);
+            await _unitOfWork.ProductRepository.InsertAsync(productViewModel.Product);
             await _unitOfWork.Save();
 
             TempData["success"] = "Product created successfully";
@@ -100,7 +100,7 @@ public class ProductController : Controller
             return NotFound();
         }
 
-        var product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
+        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
 
         if (product is null)
         {
@@ -113,14 +113,14 @@ public class ProductController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePOST(long id)
     {
-        var product = await _unitOfWork.ProductRepository.GetByExpression(p => p.Id == id);
+        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
 
         if (product is null)
         {
             return NotFound();
         }
 
-        _unitOfWork.ProductRepository.Remove(product);
+        _unitOfWork.ProductRepository.Delete(product);
         await _unitOfWork.Save();
 
         TempData["success"] = "Product deleted successfully";

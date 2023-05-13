@@ -16,7 +16,7 @@ public class CategoryController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var categories = await _unitOfWork.CategoryRepository.GetAll();
+        var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
 
         return View(categories);
     }
@@ -36,7 +36,7 @@ public class CategoryController : Controller
 
         if (ModelState.IsValid)
         {
-            await _unitOfWork.CategoryRepository.Add(category);
+            await _unitOfWork.CategoryRepository.InsertAsync(category);
             await _unitOfWork.Save();
 
             TempData["success"] = "Category created successfully";
@@ -54,7 +54,7 @@ public class CategoryController : Controller
             return NotFound();
         }
 
-        var category = await _unitOfWork.CategoryRepository.GetByExpression(c => c.Id == id);
+        var category = await _unitOfWork.CategoryRepository.GetFirstOrDefaultByExpressionAsync(c => c.Id == id);
 
         if (category is null)
         {
@@ -73,7 +73,7 @@ public class CategoryController : Controller
         }
 
         var categoryWithSameDisplayOrder = await _unitOfWork.CategoryRepository
-            .GetByExpression(c => c.DisplayOrder == category.DisplayOrder && c.Id != category.Id);
+            .GetFirstOrDefaultByExpressionAsync(c => c.DisplayOrder == category.DisplayOrder && c.Id != category.Id);
 
 
         if (categoryWithSameDisplayOrder is not null)
@@ -83,7 +83,7 @@ public class CategoryController : Controller
 
         if (ModelState.IsValid)
         {
-            var categoryInDb = await _unitOfWork.CategoryRepository.GetByExpression(c => c.Id == category.Id);
+            var categoryInDb = await _unitOfWork.CategoryRepository.GetFirstOrDefaultByExpressionAsync(c => c.Id == category.Id);
 
             if (categoryInDb is not null)
             {
@@ -108,7 +108,7 @@ public class CategoryController : Controller
             return NotFound();
         }
 
-        var category = await _unitOfWork.CategoryRepository.GetByExpression(c => c.Id == id);
+        var category = await _unitOfWork.CategoryRepository.GetFirstOrDefaultByExpressionAsync(c => c.Id == id);
 
         if (category is null)
         {
@@ -121,14 +121,14 @@ public class CategoryController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePOST(long id)
     {
-        var category = await _unitOfWork.CategoryRepository.GetByExpression(c => c.Id == id);
+        var category = await _unitOfWork.CategoryRepository.GetFirstOrDefaultByExpressionAsync(c => c.Id == id);
 
         if (category is null)
         {
             return NotFound();
         }
 
-        _unitOfWork.CategoryRepository.Remove(category);
+        _unitOfWork.CategoryRepository.Delete(category);
         await _unitOfWork.Save();
 
         TempData["success"] = "Category deleted successfully";
