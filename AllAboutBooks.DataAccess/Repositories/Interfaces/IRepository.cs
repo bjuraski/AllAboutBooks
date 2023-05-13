@@ -2,19 +2,19 @@
 
 namespace AllAboutBooks.DataAccess.Repositories.Interfaces;
 
-public interface IRepository<T> where T : class
+public interface IRepository<TEntity> where TEntity : class
 {
-    Task<IEnumerable<T>> GetAll();
+    Task<IEnumerable<TEntity>> GetAll();
 
-    Task<T> GetByExpression(Expression<Func<T, bool>> expression);
+    Task<TEntity> GetByExpression(Expression<Func<TEntity, bool>> expression);
 
-    Task Add(T entity);
+    Task Add(TEntity entity);
 
-    Task Update(T entity);
+    Task Update(TEntity entity);
 
-    void Remove(T entity);
+    void Remove(TEntity entity);
 
-    void RemoveRange(IEnumerable<T> entities);
+    void RemoveRange(IEnumerable<TEntity> entities);
 
     Task Save();
 }

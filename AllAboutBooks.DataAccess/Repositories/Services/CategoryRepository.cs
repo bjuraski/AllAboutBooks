@@ -3,7 +3,7 @@ using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using AllAboutBooks.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AllAboutBooks.DataAccess.Repositories;
+namespace AllAboutBooks.DataAccess.Repositories.Services;
 
 public class CategoryRepository : Repository<Category>, ICategoryRepository
 {

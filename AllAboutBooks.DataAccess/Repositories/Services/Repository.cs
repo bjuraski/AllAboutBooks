@@ -3,25 +3,25 @@ using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AllAboutBooks.DataAccess.Repositories;
+namespace AllAboutBooks.DataAccess.Repositories.Services;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     private readonly ApplicationDbContext _applicationDbContext;
-    internal DbSet<T> _dbSet;
+    internal DbSet<TEntity> _dbSet;
 
     public Repository(ApplicationDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext;
-        _dbSet = applicationDbContext.Set<T>();
+        _dbSet = applicationDbContext.Set<TEntity>();
     }
 
-    public async Task Add(T entity)
+    public async Task Add(TEntity entity)
     {
         await _dbSet.AddAsync(entity);
     }
 
-    public async Task<IEnumerable<T>> GetAll()
+    public async Task<IEnumerable<TEntity>> GetAll()
     {
         var query = _dbSet.AsNoTracking();
         var orderedQuery = GetDefaultOrder(query);
@@ -29,33 +29,33 @@ public class Repository<T> : IRepository<T> where T : class
         return await orderedQuery.ToListAsync();
     }
 
-    public virtual IQueryable<T> GetDefaultOrder(IQueryable<T> query)
+    public virtual IQueryable<TEntity> GetDefaultOrder(IQueryable<TEntity> query)
     {
         return query;
     }
 
-    public async Task<T> GetByExpression(Expression<Func<T, bool>> expression)
+    public async Task<TEntity> GetByExpression(Expression<Func<TEntity, bool>> expression)
     {
         var query = _dbSet.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(expression);
     }
 
-    public void Remove(T entity)
+    public void Remove(TEntity entity)
     {
         _dbSet.Remove(entity);
     }
 
-    public void RemoveRange(IEnumerable<T> entities)
+    public void RemoveRange(IEnumerable<TEntity> entities)
     {
         _dbSet.RemoveRange(entities);
     }
 
-    public virtual async Task Update(T entity)
+    public virtual Task Update(TEntity entity)
     {
         _dbSet.Update(entity);
 
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public virtual async Task Save()
