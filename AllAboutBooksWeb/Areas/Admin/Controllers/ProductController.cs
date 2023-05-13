@@ -93,38 +93,44 @@ public class ProductController : Controller
         return RedirectToAction("Index", "Product");
     }
 
+    #region API CALLS
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var products = await _unitOfWork.ProductRepository.GetAllAsync();
+
+        return Json(new { data = products });
+    }
+
+    [HttpDelete]
     public async Task<IActionResult> Delete(long? id)
     {
         if (id is null || id == 0)
         {
-            return NotFound();
+            return Json(new { success = false, message = "Error while deleting. Item Id is not specified." });
         }
 
-        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
+        var productToDelete = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
 
-        if (product is null)
+        if (productToDelete is null)
         {
-            return NotFound();
+            return Json(new { success = false, message = "Error while deleting. Item can't be found." });
         }
 
-        return View(product);
-    }
+        var wwwRootPath = _webHostEnvironment.WebRootPath;
+        var oldImagePath = Path.Combine(wwwRootPath, productToDelete.ImageUrl.TrimStart('\\'));
 
-    [HttpPost, ActionName("Delete")]
-    public async Task<IActionResult> DeletePOST(long id)
-    {
-        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
-
-        if (product is null)
+        if (System.IO.File.Exists(oldImagePath))
         {
-            return NotFound();
+            System.IO.File.Delete(oldImagePath);
         }
 
-        _unitOfWork.ProductRepository.Delete(product);
+        _unitOfWork.ProductRepository.Delete(productToDelete);
         await _unitOfWork.Save();
 
-        TempData["success"] = "Product deleted successfully";
-
-        return RedirectToAction("Index", "Product");
+        return Json(new { success = true, message = "Product deleted successfully." });
     }
+
+    #endregion
 }
