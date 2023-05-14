@@ -36,11 +36,7 @@ public class ProductRepository : Repository<Product>, IProductRepository
             productFromDb.Price50 = entity.Price50;
             productFromDb.Price100 = entity.Price100;
             productFromDb.CategoryId = entity.CategoryId;
-
-            if (productFromDb.ImageUrl != null)
-            {
-                productFromDb.ImageUrl = entity.ImageUrl;
-            }
+            productFromDb.ImageUrl = entity.ImageUrl;
         }
     }
 }
