@@ -1,11 +1,14 @@
 ﻿using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using AllAboutBooks.Models;
 using AllAboutBooks.Models.ViewModels;
+using AllAboutBooks.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AllAboutBooksWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = StaticDetails.RoleAdmin)]
 public class ProductController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
