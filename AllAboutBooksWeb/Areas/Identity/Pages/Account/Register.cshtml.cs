@@ -102,6 +102,24 @@ public class RegisterModel : PageModel
 
         [ValidateNever]
         public IEnumerable<SelectListItem> RoleList { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        public string Country { get; set; }
+
+        public string City { get; set; }
+
+        public string StreetAddress { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 
 
@@ -140,6 +158,14 @@ public class RegisterModel : PageModel
 
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+            user.Name = $"{Input.FirstName} {Input.LastName}";
+            user.Country = Input.Country;
+            user.City = Input.City;
+            user.StreetAddress = Input.StreetAddress;
+            user.PostalCode = Input.PostalCode;
+            user.PhoneNumber = Input.PhoneNumber;
+
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
