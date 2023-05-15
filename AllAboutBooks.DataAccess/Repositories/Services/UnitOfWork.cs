@@ -9,6 +9,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IProductRepository ProductRepository { get; private set; }
 
+    public ICompanyRepository CompanyRepository { get; private set; }
+
     private readonly ApplicationDbContext _applicationDbContext;
 
     public UnitOfWork(ApplicationDbContext applicationDbContext)
@@ -16,6 +18,7 @@ public class UnitOfWork : IUnitOfWork
         _applicationDbContext = applicationDbContext;
         CategoryRepository = new CategoryRepository(_applicationDbContext);
         ProductRepository = new ProductRepository(_applicationDbContext);
+        CompanyRepository = new CompanyRepository(_applicationDbContext);
     }
 
     public async Task Save()

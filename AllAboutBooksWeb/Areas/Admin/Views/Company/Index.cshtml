@@ -1,0 +1,36 @@
+﻿@using AllAboutBooks.Utility;
+@model IEnumerable<Company>
+
+@{
+    ViewData["Title"] = "Companies";
+}
+
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">Companies</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Company" asp-action="Upsert" class="btn btn-primary">
+                <i class="@BootstrapIcons.PlusSquare"></i> Create New Company
+            </a>
+        </div>
+    </div>
+    <table id="tableData" class="table table-bordered table-striped w-100">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Street Address</th>
+                <th>Postal Code</th>
+                <th>Phone Number</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/company.js"></script>
+}

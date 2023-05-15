@@ -111,14 +111,14 @@ public class ProductController : Controller
     {
         if (id is null || id == 0)
         {
-            return Json(new { success = false, message = "Error while deleting. Item Id is not specified." });
+            return Json(new { success = false, message = "Error while deleting. Product Id is not specified." });
         }
 
         var productToDelete = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
 
         if (productToDelete is null)
         {
-            return Json(new { success = false, message = "Error while deleting. Item can't be found." });
+            return Json(new { success = false, message = "Error while deleting. Product can't be found." });
         }
 
         var wwwRootPath = _webHostEnvironment.WebRootPath;

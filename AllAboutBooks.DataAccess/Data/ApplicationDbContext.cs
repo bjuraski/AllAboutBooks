@@ -17,6 +17,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+    public DbSet<Company> Companies { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -26,6 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<Product>()
             .HasData(GetStaticProducts());
+
+        modelBuilder.Entity<Company>()
+            .HasData(GetStaticComapnies());
     }
 
     private static List<Category> GetStaticCategories()
@@ -116,6 +121,41 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
                 Price50 = 22,
                 Price100 = 20,
                 CategoryId = 2
+            }
+        };
+
+    private static List<Company> GetStaticComapnies()
+        => new()
+        {
+            new Company
+            {
+                Id = 1,
+                Name = "Tech Solution",
+                Country = "Germany",
+                City = "Berlin",
+                StreetAddress = "BundesStrasse 10",
+                PostalCode = "555666",
+                PhoneNumber = "0214567890"
+            },
+            new Company
+            {
+                Id = 2,
+                Name = "Best Books Shop",
+                Country = "England",
+                City = "Liverpool",
+                StreetAddress = "Anfield Road 45",
+                PostalCode = "13579",
+                PhoneNumber = "987654321"
+            },
+            new Company
+            {
+                Id = 3,
+                Name = "Fiesta",
+                Country = "Spain",
+                City = "Madrid",
+                StreetAddress = "Santiago 22",
+                PostalCode = "4582",
+                PhoneNumber = "8524972"
             }
         };
 }
