@@ -25,49 +25,49 @@
             <div class="col-10">
                 <div class="form-group">
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.Title" class="form-control" id="floatingTitle" />
-                        <label for="floatingTitle" asp-for="Product.Title"></label>
+                        <input asp-for="Product.Title" class="form-control" placeholder="Enter Title" />
+                        <label asp-for="Product.Title"></label>
                         <span asp-validation-for="Product.Title" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.Author" class="form-control" id="floatingAuthor" />
-                        <label for="floatingAuthor" asp-for="Product.Author"></label>
+                        <input asp-for="Product.Author" class="form-control" placeholder="Enter Author" />
+                        <label asp-for="Product.Author"></label>
                         <span asp-validation-for="Product.Author" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label for="floatingDescription" asp-for="Product.Description" class="text-muted"></label>
-                        <textarea asp-for="Product.Description" class="form-control" id="floatingDescription"></textarea>
+                        <textarea asp-for="Product.Description" class="form-control"></textarea>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.InternationalStandardBookNumber" class="form-control" id="floatingISBN" />
-                        <label for="floatingISBN" asp-for="Product.InternationalStandardBookNumber"></label>
+                        <input asp-for="Product.InternationalStandardBookNumber" class="form-control" placeholder="Enter ISBN" />
+                        <label asp-for="Product.InternationalStandardBookNumber"></label>
                         <span asp-validation-for="Product.InternationalStandardBookNumber" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.ListPrice" class="form-control" id="floatingListPrice" />
-                        <label for="floatingListPrice" asp-for="Product.ListPrice"></label>
+                        <input asp-for="Product.ListPrice" class="form-control" placeholder="Enter List Price" />
+                        <label asp-for="Product.ListPrice"></label>
                         <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.Price" class="form-control" id="floatingPrice" />
-                        <label for="floatingPrice" asp-for="Product.Price"></label>
+                        <input asp-for="Product.Price" class="form-control" placeholder="Enter Price" />
+                        <label asp-for="Product.Price"></label>
                         <span asp-validation-for="Product.Price" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.Price50" class="form-control" id="floatingPrice50" />
-                        <label for="floatingPrice50" asp-for="Product.Price50"></label>
+                        <input asp-for="Product.Price50" class="form-control" placeholder="Enter Price 50+" />
+                        <label asp-for="Product.Price50"></label>
                         <span asp-validation-for="Product.Price50" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Product.Price100" class="form-control" id="floatingPrice100" />
-                        <label for="floatingPrice100" asp-for="Product.Price100"></label>
+                        <input asp-for="Product.Price100" class="form-control" placeholder="Enter Price 100+" />
+                        <label asp-for="Product.Price100"></label>
                         <span asp-validation-for="Product.Price100" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <select asp-for="Product.CategoryId" asp-items="Model.CategoryList" class="form-select" id="floatingCategoryId">
+                        <select asp-for="Product.CategoryId" asp-items="Model.CategoryList" class="form-select">
                             <option disabled selected>-- Select Category --</option>
                         </select>
-                        <label for="floatingCategoryId" asp-for="Product.CategoryId"></label>
+                        <label asp-for="Product.CategoryId"></label>
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
