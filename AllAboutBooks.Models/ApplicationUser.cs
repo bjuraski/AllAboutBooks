@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AllAboutBooks.Models;
 
@@ -15,4 +16,10 @@ public class ApplicationUser : IdentityUser
     public string StreetAddress { get; set; }
 
     public string PostalCode { get; set; }
+
+    [Display(Name = "Company")]
+    public long? CompanyId { get; set; }
+
+    [ForeignKey("CompanyId")]
+    public Company Company { get; set; }
 }

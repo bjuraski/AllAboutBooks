@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using AllAboutBooks.Models;
 using AllAboutBooks.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -27,6 +28,7 @@ public class RegisterModel : PageModel
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailSender _emailSender;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IUnitOfWork _unitOfWork;
 
     public RegisterModel(
         UserManager<IdentityUser> userManager,
@@ -34,7 +36,8 @@ public class RegisterModel : PageModel
         SignInManager<IdentityUser> signInManager,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,
+        IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -43,6 +46,7 @@ public class RegisterModel : PageModel
         _logger = logger;
         _emailSender = emailSender;
         _roleManager = roleManager;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -120,6 +124,11 @@ public class RegisterModel : PageModel
         public string PostalCode { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public long? CompanyId { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> CompanyList { get; set; }
     }
 
 
@@ -135,13 +144,16 @@ public class RegisterModel : PageModel
             await _roleManager.CreateAsync(new IdentityRole(StaticDetails.RoleCompany));
         }
 
+        var companyList = await _unitOfWork.CompanyRepository.GetCompanySelectList();
+
         Input = new InputModel
         {
             RoleList = _roleManager.Roles.Select(r => new SelectListItem
             {
                 Text = r.Name,
                 Value = r.Name
-            })
+            }),
+            CompanyList = companyList
         };
 
         ReturnUrl = returnUrl;
@@ -165,6 +177,11 @@ public class RegisterModel : PageModel
             user.StreetAddress = Input.StreetAddress;
             user.PostalCode = Input.PostalCode;
             user.PhoneNumber = Input.PhoneNumber;
+
+            if (Input.Role == StaticDetails.RoleCompany)
+            {
+                user.CompanyId = Input.CompanyId;
+            }
 
             var result = await _userManager.CreateAsync(user, Input.Password);
 
