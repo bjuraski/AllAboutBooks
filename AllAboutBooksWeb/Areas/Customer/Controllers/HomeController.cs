@@ -38,7 +38,14 @@ public class HomeController : Controller
             return NotFound(nameof(Product));
         }
 
-        return View(product);
+        var shoppingCart = new ShoppingCart
+        {
+            ProductId = id.Value,
+            Product = product,
+            Count = 1
+        };
+
+        return View(shoppingCart);
     }
 
     public IActionResult Privacy()
