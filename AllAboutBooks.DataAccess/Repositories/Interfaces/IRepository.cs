@@ -6,7 +6,7 @@ public interface IRepository<TEntity> where TEntity : class
 {
     Task<IEnumerable<TEntity>> GetAllAsync();
 
-    Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression);
+    Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression, bool shouldBeTracked = true);
 
     Task InsertAsync(TEntity entity);
 

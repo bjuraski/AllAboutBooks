@@ -1,7 +1,9 @@
 ﻿using AllAboutBooks.DataAccess.Repositories.Interfaces;
 using AllAboutBooks.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace AllAboutBooksWeb.Areas.Customer.Controllers;
 
@@ -24,28 +26,65 @@ public class HomeController : Controller
         return View(products);
     }
 
-    public async Task<IActionResult> Details(long? id)
+    public async Task<IActionResult> Details(long? productId, long id)
     {
-        if (id is null || id == 0)
+        if (!productId.HasValue || productId == 0)
         {
             return NotFound(nameof(Product));
         }
 
-        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == id);
+        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == productId);
 
         if (product is null)
         {
             return NotFound(nameof(Product));
         }
 
-        var shoppingCart = new ShoppingCart
+        if (id == default)
         {
-            ProductId = id.Value,
-            Product = product,
-            Count = 1
-        };
+            var shoppingCart = new ShoppingCart
+            {
+                ProductId = productId.Value,
+                Product = product,
+                Count = 1
+            };
 
-        return View(shoppingCart);
+            return View(shoppingCart);
+        }
+
+        var cartFromDb = await _unitOfWork.ShoppingCartRepository.GetFirstOrDefaultByExpressionAsync(sc => sc.Id == id);
+
+        return View(cartFromDb);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Details(ShoppingCart shoppingCart)
+    {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        shoppingCart.ApplicationUserId = userId;
+
+        var cartFromDb = await _unitOfWork.ShoppingCartRepository
+            .GetFirstOrDefaultByExpressionAsync(sc => sc.ApplicationUserId == userId && sc.ProductId == shoppingCart.ProductId, false);
+
+        if (cartFromDb is not null)
+        {
+            cartFromDb.Count += shoppingCart.Count;
+
+            await _unitOfWork.ShoppingCartRepository.Update(cartFromDb);
+            await _unitOfWork.Save();
+        }
+        else
+        {
+            await _unitOfWork.ShoppingCartRepository.InsertAsync(shoppingCart);
+            await _unitOfWork.Save();
+        }
+
+        TempData["success"] = "Shopping cart updated successfully";
+
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Privacy()

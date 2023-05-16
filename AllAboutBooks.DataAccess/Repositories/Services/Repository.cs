@@ -41,9 +41,14 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         await _dbSet.AddAsync(entity);
     }
 
-    public async Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression, bool shouldBeTracked = true)
     {
         IQueryable<TEntity> query = _dbSet;
+
+        if (!shouldBeTracked)
+        {
+            query = query.AsNoTracking();
+        }
 
         query = ConfigureIncludes(query);
 
