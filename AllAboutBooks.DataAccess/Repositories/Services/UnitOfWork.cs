@@ -11,6 +11,8 @@ public class UnitOfWork : IUnitOfWork
 
     public ICompanyRepository CompanyRepository { get; private set; }
 
+    public IShoppingCartRepository ShoppingCartRepository { get; private set; }
+
     private readonly ApplicationDbContext _applicationDbContext;
 
     public UnitOfWork(ApplicationDbContext applicationDbContext)
@@ -19,6 +21,7 @@ public class UnitOfWork : IUnitOfWork
         CategoryRepository = new CategoryRepository(_applicationDbContext);
         ProductRepository = new ProductRepository(_applicationDbContext);
         CompanyRepository = new CompanyRepository(_applicationDbContext);
+        ShoppingCartRepository = new ShoppingCartRepository(_applicationDbContext);
     }
 
     public async Task Save()
