@@ -26,35 +26,51 @@ public class HomeController : Controller
         return View(products);
     }
 
-    public async Task<IActionResult> Details(long? productId, long id)
+    public async Task<IActionResult> Details(long? productId)
     {
         if (!productId.HasValue || productId == 0)
         {
             return NotFound(nameof(Product));
         }
 
-        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == productId);
+        var product = await _unitOfWork.ProductRepository.GetFirstOrDefaultByExpressionAsync(p => p.Id == productId, false);
 
         if (product is null)
         {
             return NotFound(nameof(Product));
         }
 
-        if (id == default)
-        {
-            var shoppingCart = new ShoppingCart
-            {
-                ProductId = productId.Value,
-                Product = product,
-                Count = 1
-            };
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
 
-            return View(shoppingCart);
+        if (claimsIdentity.IsAuthenticated)
+        {
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var cartFromDb = await _unitOfWork.ShoppingCartRepository
+                .GetFirstOrDefaultByExpressionAsync(sc => sc.ApplicationUserId == userId && sc.ProductId == productId, false);
+
+            if (cartFromDb is null)
+            {
+                var shoppingCart = new ShoppingCart
+                {
+                    ProductId = productId.Value,
+                    Product = product,
+                    Count = 1
+                };
+
+                return View(shoppingCart);
+            }
+
+            return View(cartFromDb);
         }
 
-        var cartFromDb = await _unitOfWork.ShoppingCartRepository.GetFirstOrDefaultByExpressionAsync(sc => sc.Id == id);
+        var notAutheticatedshoppingCart = new ShoppingCart
+        {
+            ProductId = productId.Value,
+            Product = product,
+            Count = 1
+        };
 
-        return View(cartFromDb);
+        return View(notAutheticatedshoppingCart);
     }
 
     [HttpPost]
@@ -71,7 +87,7 @@ public class HomeController : Controller
 
         if (cartFromDb is not null)
         {
-            cartFromDb.Count += shoppingCart.Count;
+            cartFromDb.Count = shoppingCart.Count;
 
             await _unitOfWork.ShoppingCartRepository.Update(cartFromDb);
             await _unitOfWork.Save();
