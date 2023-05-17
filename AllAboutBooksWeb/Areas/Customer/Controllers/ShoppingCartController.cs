@@ -38,6 +38,11 @@ public class ShoppingCartController : Controller
         return View(shoppingCartViewModel);
     }
 
+    public async Task<IActionResult> Summary()
+    {
+        return View();
+    }
+
     public async Task<IActionResult> Increment(long cartId)
     {
         var cartFromDb = await _unitOfWork.ShoppingCartRepository.GetFirstOrDefaultByExpressionAsync(sc => sc.Id == cartId);
