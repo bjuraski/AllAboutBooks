@@ -8,6 +8,8 @@ public interface IRepository<TEntity> where TEntity : class
 
     Task<TEntity> GetFirstOrDefaultByExpressionAsync(Expression<Func<TEntity, bool>> expression, bool shouldBeTracked = true);
 
+    Task<IEnumerable<TEntity>> GetAllByExpressionAsync(Expression<Func<TEntity, bool>> expression, bool shouldBeTracked = true);
+
     Task InsertAsync(TEntity entity);
 
     Task Update(TEntity entity);

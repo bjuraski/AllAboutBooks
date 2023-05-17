@@ -55,6 +55,20 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return await query.FirstOrDefaultAsync(expression);
     }
 
+    public async Task<IEnumerable<TEntity>> GetAllByExpressionAsync(Expression<Func<TEntity, bool>> expression, bool shouldBeTracked = true)
+    {
+        IQueryable<TEntity> query = _dbSet;
+
+        if (!shouldBeTracked)
+        {
+            query = query.AsNoTracking();
+        }
+
+        query = ConfigureIncludes(query);
+
+        return await query.Where(expression).ToListAsync();
+    }
+
     public void Delete(TEntity entity)
     {
         _dbSet.Remove(entity);
